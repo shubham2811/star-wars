@@ -1,5 +1,6 @@
 import * as React from "react";
 import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 export const TextBox = props => {
   const {
     required,
@@ -14,9 +15,12 @@ export const TextBox = props => {
     error,
     helperText,
     value,
-    handleInputChange
+    handleInputChange,
+    autoComplete,
+    dataList,
+    disabled
   } = props;
-  return (
+  return !autoComplete ? (
     <TextField
       error={error}
       helperText={helperText}
@@ -31,6 +35,22 @@ export const TextBox = props => {
       id={id}
       placeholder={placeholder}
       onChange={event => handleInputChange(event)}
-    ></TextField>
+      disabled={disabled}
+    />
+  ) : (
+    <Autocomplete
+      id="free-solo-demo"
+      freeSolo
+      options={dataList.map(option => option.name)}
+      renderInput={params => (
+        <TextField
+          {...params}
+          label="freeSolo"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+        />
+      )}
+    />
   );
 };

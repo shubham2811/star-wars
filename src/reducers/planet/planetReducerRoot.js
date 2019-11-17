@@ -1,12 +1,17 @@
 import { PlanetActionConstants } from "../../common/actionConstants";
 const initialState = {
-  planetList: [],
-  isListLoading: false
+  planetListByPage: [],
+  isListLoading: false,
+  allPlanetList: []
 };
 const planetReducer = (state = initialState, action) => {
   switch (action.type) {
-    case PlanetActionConstants.GET_PLANET_LIST:
-      return { ...state, planetList: action.payload.data };
+    case PlanetActionConstants.GET_PLANET_RESPONSE_SUCCESS:
+      return {
+        ...state,
+        planetListByPage: action.payload,
+        allPlanetList: [...state.allPlanetList, ...action.payload.results]
+      };
     default:
       return state;
   }

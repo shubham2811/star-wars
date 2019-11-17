@@ -48,7 +48,7 @@ export const Loader = () => {
   return (
     <LoaderOverlay id="Loader">
       <LoaderElem />
-      <LoaderText>Loading Content...</LoaderText>
+      <LoaderText>Loading Planets...</LoaderText>
     </LoaderOverlay>
   );
 };

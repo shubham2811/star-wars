@@ -14,7 +14,12 @@ const loginReducer = (state = initialState, action) => {
         isLogin: true
       };
     case LoginActionConstants.LOGIN_RESPONSE_ERROR:
-      return { ...state, username: null, passowrd: null, isLogin: false };
+      return {
+        ...state,
+        username: null,
+        passowrd: null,
+        isLogin: false
+      };
     case LoginActionConstants.LOGOUT:
       return { ...state, username: null, passowrd: null, isLogin: false };
     default:

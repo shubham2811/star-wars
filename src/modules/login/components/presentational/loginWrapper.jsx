@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { TextBox } from "../../../../shared/components";
+import useForm from "./useForm";
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -32,44 +33,48 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function LoginWrapper(props) {
-  const classes = useStyles();
-  const [values, setValues] = useState({});
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleInputChange = event => {
-    event.persist();
-    setValues(values => ({
-      ...values,
-      [event.target.name]: event.target.value
-    }));
-    setErrors(validate(values));
+  // Define your state schema
+  const stateSchema = {
+    username: {
+      value: "",
+      error: ""
+    },
+    password: { value: "", error: "" }
+  };
+  // Create your own validationStateSchema
+  // stateSchema property should be the same in validationStateSchema
+  // in-order a validation to works in your input.
+  const stateValidatorSchema = {
+    username: {
+      required: true,
+      validator: {
+        func: value => /^[a-zA-Z]+$/.test(value),
+        error: "Invalid first name format."
+      }
+    },
+    password: {
+      required: true,
+      validator: {
+        func: value => /^[a-zA-Z]+$/.test(value),
+        error: "Invalid last name format."
+      }
+    }
   };
 
-  const validate = values => {
-    let errors = {};
-    if (!values.username) {
-      errors.username = "Please enter the username";
+  const classes = useStyles();
+  const { values, errors, handleOnChange, handleOnSubmit, disable } = useForm(
+    stateSchema,
+    stateValidatorSchema,
+    onSubmitForm
+  );
+  function onSubmitForm(state) {
+    if (state.username !== "" && state.password !== "") {
+      props.login(state);
+      props.history.push("/planets");
     }
-    if (!values.password) {
-      errors.password = "Please enter the password";
-    }
-    return errors;
-  };
-  const handleSubmit = event => {
-    if (event) event.preventDefault();
-    setErrors(validate(values));
-    setIsSubmitting(true);
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      console.log("No error you can proceed");
-      props.login(values);
-    }
-  };
-  // useEffect(() => {
-  //   if (Object.keys(errors).length === 0 && isSubmitting) {
-  //     console.log("No error you can proceed");
-  //     props.login(values);
-  //   }
-  // }, [values, isSubmitting, errors]);
+  }
+
+  const { username, password } = values;
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -79,7 +84,7 @@ export function LoginWrapper(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <TextBox
             error={!!errors.username}
             variant="outlined"
@@ -90,8 +95,8 @@ export function LoginWrapper(props) {
             label="Username"
             name="username"
             helperText={errors.username}
-            handleInputChange={handleInputChange}
-            value={values.username || ""}
+            handleInputChange={handleOnChange}
+            value={username}
           />
           <TextBox
             error={!!errors.password}
@@ -103,8 +108,8 @@ export function LoginWrapper(props) {
             name="password"
             type="password"
             helperText={errors.password}
-            handleInputChange={handleInputChange}
-            value={values.password || ""}
+            handleInputChange={handleOnChange}
+            value={password}
             required={true}
           />
 
@@ -112,8 +117,8 @@ export function LoginWrapper(props) {
             type="submit"
             fullWidth
             variant="contained"
-            onClick={handleSubmit}
             color="primary"
+            disabled={disable}
           >
             Sign In
           </Button>

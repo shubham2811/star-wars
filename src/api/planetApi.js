@@ -1,4 +1,4 @@
 import axios from "../common/apiConfig";
-export const getPlanetList = async () => {
-  return axios.get("/posts");
+export const getAllPlanetList = async pageNo => {
+  return axios.get(`/planets/?page=${pageNo}`);
 };

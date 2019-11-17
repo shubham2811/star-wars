@@ -2,7 +2,7 @@ import { applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import commonRootReducer from "../reducers";
 import rootSaga from "../sagas";
-import { logger } from "redux-logger";
+// import { logger } from "redux-logger";
 const sagaMiddleware = createSagaMiddleware();
 /**
  * @description Configures the redux store.
@@ -15,9 +15,7 @@ function configureStore() {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const appStore = createStore(
     commonRootReducer,
-    /* preloadedState, */ composeEnhancers(
-      applyMiddleware(sagaMiddleware, logger)
-    )
+    /* preloadedState, */ composeEnhancers(applyMiddleware(sagaMiddleware))
   );
 
   appStore.runSagaTask = () => {

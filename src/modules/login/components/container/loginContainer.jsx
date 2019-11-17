@@ -4,7 +4,7 @@ import { LoginWrapper } from "../presentational/loginWrapper";
 import { login } from "../../actions/loginActionRoot";
 class LoginContainer extends React.PureComponent {
   render() {
-    return <LoginWrapper login={this.props.login} />;
+    return <LoginWrapper login={this.props.login} {...this.props} />;
   }
 }
 const mapDispatchToProps = dispatch => ({
